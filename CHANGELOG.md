@@ -1,3 +1,15 @@
+# v0.3.0 (Tue Jul 19 2022)
+
+#### 🚀 Enhancement
+
+- feat: changes [#2](https://github.com/ChintanpatelTH/data_sdk_v2/pull/2) ([@ChintanpatelTH](https://github.com/ChintanpatelTH))
+
+#### Authors: 1
+
+- Chintan Patel ([@ChintanpatelTH](https://github.com/ChintanpatelTH))
+
+---
+
 # v0.2.0 (Tue Jul 19 2022)
 
 #### 🚀 Enhancement
