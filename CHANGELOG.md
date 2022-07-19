@@ -1,3 +1,18 @@
+# v0.2.0 (Tue Jul 19 2022)
+
+#### 🚀 Enhancement
+
+
+#### 🐛 Bug Fix
+
+- fix: update .autorc ([@ChintanpatelTH](https://github.com/ChintanpatelTH))
+
+#### Authors: 1
+
+- Chintan Patel ([@ChintanpatelTH](https://github.com/ChintanpatelTH))
+
+---
+
 # v1.0.8 (Mon Jul 18 2022)
 
 #### 🐛 Bug Fix
