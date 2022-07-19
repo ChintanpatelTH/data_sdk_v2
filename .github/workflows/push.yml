@@ -55,15 +55,15 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Update normalize
-      #   if: steps.is-normalize-changed.outputs.normalize == 'true'
-      #   run: |
-      #     cd src/normalize && bump2version ${{ steps.auto-version.outputs.version }} && cd ..
+      - name: Update normalize
+        if: steps.is-normalize-changed.outputs.normalize == 'true'
+        run: |
+          cd src/normalize && bump2version ${{ steps.auto-version.outputs.version }} && cd ../..
 
-      # - name: Update transform
-      #   if: steps.is-normalize-changed.outputs.transform == 'true'
-      #   run: |
-      #     cd src/transform && bump2version ${{ steps.auto-version.outputs.version }} && cd ..
+      - name: Update transform
+        if: steps.is-normalize-changed.outputs.transform == 'true'
+        run: |
+          cd src/transform && bump2version ${{ steps.auto-version.outputs.version }} && cd ../..
 
       - name: Create release
         run: |
