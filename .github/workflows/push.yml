@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - develop
+    paths:
+      - src/**
 
 jobs:
   auto-release:
@@ -17,6 +19,16 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - name: Check changes in normalize
+        id: is-normalize-changed
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            normalize:
+              - 'src/normalize/**'
+            transform:
+              - 'src/transform/**'
 
       - name: Configure Git User
         run: |
@@ -42,6 +54,16 @@ jobs:
           echo "::set-output name=version::$version"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update normalize
+        if: steps.is-normalize-changed.outputs.normalize == 'true'
+        run: |
+          cd src/normalize && bump2version ${{ steps.auto-version.outputs.version }} && cd ..
+
+      - name: Update transform
+        if: steps.is-normalize-changed.outputs.transform == 'true'
+        run: |
+          cd src/transform && bump2version ${{ steps.auto-version.outputs.version }} && cd ..
 
       - name: Create release
         run: |
