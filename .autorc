@@ -1,0 +1,11 @@
+{
+  "plugins": [
+    "git-tag",
+    "conventional-commits",
+    ["upload-assets", { "assets": ["dist"] }]
+  ],
+  "owner": "ChintanpatelTH",
+  "repo": "data_sdk",
+  "name": "Chintan Patel",
+  "email": "chintan.patel@techholding.co"
+}
