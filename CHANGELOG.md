@@ -1,3 +1,17 @@
+# v0.3.1 (Tue Jul 19 2022)
+
+#### 🐛 Bug Fix
+
+- fix: second change [#6](https://github.com/ChintanpatelTH/data_sdk_v2/pull/6) ([@ChintanpatelTH](https://github.com/ChintanpatelTH))
+- fix: changes [#5](https://github.com/ChintanpatelTH/data_sdk_v2/pull/5) ([@ChintanpatelTH](https://github.com/ChintanpatelTH))
+- fix: update test cases [#4](https://github.com/ChintanpatelTH/data_sdk_v2/pull/4) ([@ChintanpatelTH](https://github.com/ChintanpatelTH))
+
+#### Authors: 1
+
+- Chintan Patel ([@ChintanpatelTH](https://github.com/ChintanpatelTH))
+
+---
+
 # v0.3.0 (Tue Jul 19 2022)
 
 #### 🚀 Enhancement
