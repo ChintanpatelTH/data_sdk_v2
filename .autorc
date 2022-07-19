@@ -5,7 +5,7 @@
     ["upload-assets", { "assets": ["dist"] }]
   ],
   "owner": "ChintanpatelTH",
-  "repo": "data_sdk",
+  "repo": "data_sdk_v2",
   "name": "Chintan Patel",
   "email": "chintan.patel@techholding.co"
 }
