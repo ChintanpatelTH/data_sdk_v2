@@ -10,8 +10,5 @@
   "email": "chintan.patel@techholding.co",
   "onlyPublishWithReleaseLabel": true,
   "baseBranch": "main",
-  "prereleaseBranches": ["develop"],
-  "shipit": {
-    "prerelease": true
-  }
+  "prereleaseBranches": ["develop"]
 }

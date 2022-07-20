@@ -24,6 +24,7 @@ jobs:
         id: is-normalize-changed
         uses: dorny/paths-filter@v2
         with:
+          base: 'develop'
           filters: |
             normalize:
               - 'src/normalize/**'
