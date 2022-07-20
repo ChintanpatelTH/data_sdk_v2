@@ -33,7 +33,7 @@ jobs:
       - name: Configure Git User
         run: |
           git config --global user.email "chintan.patel@techolding.co"
-          git config --global user.name "ChintanpatelTH"
+          git config --global user.name "Chintanpatel90"
 
       - name: Install dependencies
         run: |
@@ -60,15 +60,15 @@ jobs:
         run: |
           cd src/normalize && bump2version patch && cd ../..
 
-      # - name: Update transform
-      #   if: steps.is-normalize-changed.outputs.transform == 'true'
-      #   run: |
-      #     cd src/transform && bump2version patch && cd ../..
+      - name: Update transform
+        if: steps.is-normalize-changed.outputs.transform == 'true'
+        run: |
+          cd src/transform && bump2version patch && cd ../..
 
       - name: Create release
         run: |
-          git log --oneline -n 5
-          ~/auto shipit
+          git log -n 5
+          ~/auto shipit --use-version
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
