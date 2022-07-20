@@ -49,14 +49,6 @@ jobs:
           wget -O- "$auto_download_url" | gunzip > ~/auto
           chmod a+x ~/auto
 
-      - name: Check whether a release is due
-        id: auto-version
-        run: |
-          version="$(~/auto version)"
-          echo "::set-output name=version::$version"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Create release
         run: |
           ~/auto shipit
