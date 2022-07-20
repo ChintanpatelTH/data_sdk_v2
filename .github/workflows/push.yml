@@ -55,10 +55,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Update normalize
-        if: steps.is-normalize-changed.outputs.normalize == 'true'
-        run: |
-          cd src/normalize && bump2version patch && cd ../..
+      # - name: Update normalize
+      #   if: steps.is-normalize-changed.outputs.normalize == 'true'
+      #   run: |
+      #     cd src/normalize && bump2version patch && cd ../..
 
       # - name: Update transform
       #   if: steps.is-normalize-changed.outputs.transform == 'true'
