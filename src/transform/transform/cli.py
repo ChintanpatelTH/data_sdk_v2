@@ -4,7 +4,7 @@ import sys
 
 def main():
     """Console script for data_sdk."""
-    parser = argparse.ArgumentParser()    
+    parser = argparse.ArgumentParser()     
     parser.add_argument('_', nargs='*')
     args = parser.parse_args()
 
