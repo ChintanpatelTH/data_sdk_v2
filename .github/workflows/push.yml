@@ -58,12 +58,12 @@ jobs:
       - name: Update normalize
         if: steps.is-normalize-changed.outputs.normalize == 'true'
         run: |
-          cd src/normalize && bump2version ${{ steps.auto-version.outputs.version }} && cd ../..
+          cd src/normalize && bump2version patch && cd ../..
 
       - name: Update transform
         if: steps.is-normalize-changed.outputs.transform == 'true'
         run: |
-          cd src/transform && bump2version ${{ steps.auto-version.outputs.version }} && cd ../..
+          cd src/transform && bump2version patch && cd ../..
 
       - name: Create release
         run: |
@@ -82,6 +82,7 @@ jobs:
   #       id: latest-release
   #       run: |
   #         latest_tag="$(curl -fsSL https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest | jq -r .tag_name)"
+  #         cd src/transform && bump2version ${{ steps.auto-version.outputs.version }} && cd ../..
   #         echo "::set-output name=tag::$latest_tag"
 
   #     - name: Checkout source
