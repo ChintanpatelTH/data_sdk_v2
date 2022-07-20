@@ -23,14 +23,14 @@ jobs:
       - name: Extract branch name
         if: github.event_name != 'pull_request'
         shell: bash
-        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})"
+        run: echo "::set-output name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
 
       - name: Check changes in normalize
         id: is-normalize-changed
         uses: dorny/paths-filter@v2
         with:
-          base: '$BRANCH_NAME'
+          base: ${{ steps.extract_branch.outputs.BRANCH_NAME }}
           filters: |
             normalize:
               - 'src/normalize/**'
