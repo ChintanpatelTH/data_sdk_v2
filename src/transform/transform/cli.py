@@ -11,7 +11,7 @@ def main():
     print("Arguments: " + str(args._))
     print("Replace this message by putting your code into "
           "data_sdk.cli.main")  
-    return 0
+    return 0 
 
 
 if __name__ == "__main__":
