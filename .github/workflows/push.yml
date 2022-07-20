@@ -60,10 +60,10 @@ jobs:
         run: |
           cd src/normalize && bump2version patch && cd ../..
 
-      - name: Update transform
-        if: steps.is-normalize-changed.outputs.transform == 'true'
-        run: |
-          cd src/transform && bump2version patch && cd ../..
+      # - name: Update transform
+      #   if: steps.is-normalize-changed.outputs.transform == 'true'
+      #   run: |
+      #     cd src/transform && bump2version patch && cd ../..
 
       - name: Create release
         run: |
