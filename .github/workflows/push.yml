@@ -7,6 +7,12 @@ on:
       - develop
     paths:
       - src/**
+  pull_request:
+    branches: # PRs to the following branches will trigger the workflow
+      - main
+      - develop
+    paths:
+      - src/**
 
 jobs:
   auto-release:
