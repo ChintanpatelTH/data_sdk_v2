@@ -8,7 +8,7 @@ def main():
     parser.add_argument('_', nargs='*')
     args = parser.parse_args()
 
-    print("Arguments: " + str(args._))
+    print("Arguments: " + str(args._)) 
     print("Replace this message by putting your code into "
           "data_sdk.cli.main")  
     return 0 
