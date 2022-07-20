@@ -47,12 +47,18 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
 
-lint/flake8: ## check style with flake8
-	flake8 data_sdk tests
-lint/black: ## check style with black
-	black --check data_sdk tests
+install-deps:
+	python -m pip install black flake8
 
-lint: lint/flake8 lint/black ## check style
+fmt-check:
+	cd infrastructure && terragrunt hclfmt --terragrunt-check
+	python -m black src tests --check
+
+fmt:
+	python -m black src src/**/tests
+
+lint:
+	python -m flake8 src src/**/tests --ignore="E,W"
 
 test: ## run tests quickly with the default Python
 	pytest
