@@ -1,12 +1,12 @@
 name: Publish on push
 
 on:
-  push:
-    branches:
-      - main
-      - develop
-    paths:
-      - src/**
+  # push:
+  #   branches:
+  #     - main
+  #     - develop
+  #   paths:
+  #     - src/**
   pull_request:
     branches: # PRs to the following branches will trigger the workflow
       - main
@@ -30,7 +30,6 @@ jobs:
         id: is-normalize-changed
         uses: dorny/paths-filter@v2
         with:
-          base: ${GITHUB_REF##*/}
           filters: |
             normalize:
               - 'src/normalize/**'
