@@ -14,6 +14,8 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
     outputs:
       auto-version: ${{ steps.auto-version.outputs.version }}
+      normalize_change: ${{ steps.is-normalize-changed.outputs.normalize }}
+      transform_change: ${{ steps.is-normalize-changed.outputs.transform }}
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
@@ -28,9 +30,6 @@ jobs:
 
       - name: Check file changes
         id: is-normalize-changed
-        outputs:
-          normalize_change: ${{ steps.is-normalize-changed.outputs.normalize }}
-          transform_change: ${{ steps.is-normalize-changed.outputs.transform }}
         uses: dorny/paths-filter@v2
         with:
           base: ${{ steps.extract_branch.outputs.BRANCH_NAME }}
