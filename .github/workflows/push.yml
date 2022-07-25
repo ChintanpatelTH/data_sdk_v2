@@ -66,7 +66,7 @@ jobs:
   normalize-publish:
     runs-on: ubuntu-latest
     needs: Quality-check
-    if: ${{ needs.is-normalize-changed.outputs.normalize == 'true' }}
+    if: needs.is-normalize-changed.outputs.normalize == 'true'
     steps:
 
       - name: Checkout source
@@ -81,7 +81,7 @@ jobs:
   transform-publish:
     runs-on: ubuntu-latest
     needs: Quality-check
-    if: ${{ needs.is-normalize-changed.outputs.transform == 'true' }}
+    if: needs.is-normalize-changed.outputs.transform == 'true'
     steps:
 
       - name: Checkout source
