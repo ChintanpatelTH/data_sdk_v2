@@ -48,7 +48,7 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 install-deps:
-	python -m pip install black flake8
+	python -m pip install black flake8 build
 
 fmt-check:
 	cd infrastructure && terragrunt hclfmt --terragrunt-check
