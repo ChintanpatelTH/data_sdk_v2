@@ -28,6 +28,9 @@ jobs:
 
       - name: Check file changes
         id: is-normalize-changed
+        outputs:
+          normalize_change: ${{ steps.is-normalize-changed.outputs.normalize }}
+          transform_change: ${{ steps.is-normalize-changed.outputs.transform }}
         uses: dorny/paths-filter@v2
         with:
           base: ${{ steps.extract_branch.outputs.BRANCH_NAME }}
@@ -66,7 +69,7 @@ jobs:
   normalize-publish:
     runs-on: ubuntu-latest
     needs: Quality-check
-    if: needs.is-normalize-changed.outputs.normalize == 'true'
+    if: ${{ needs.is-normalize-changed.outputs.normalize_change == 'true' }}
     steps:
 
       - name: Checkout source
@@ -81,7 +84,7 @@ jobs:
   transform-publish:
     runs-on: ubuntu-latest
     needs: Quality-check
-    if: needs.is-normalize-changed.outputs.transform == 'true'
+    if: ${{ needs.is-normalize-changed.outputs.transform_change == 'true' }}
     steps:
 
       - name: Checkout source
