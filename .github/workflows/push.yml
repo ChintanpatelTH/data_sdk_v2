@@ -84,7 +84,7 @@ jobs:
 
         - name: Lint - ${{ matrix.package }}
           run: |
-            poetry run flack8 . --ignore="E,W"
+            poetry run flake8 . --ignore="E,W"
 
         - name: Build package - ${{ matrix.package }}
           run: poetry build
