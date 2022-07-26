@@ -9,12 +9,13 @@ on:
       - src/**
 
 jobs:
-  Quality-check:
+  check-changes:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
     outputs:
-      normalize_change: ${{ steps.is-normalize-changed.outputs.normalize }}
-      transform_change: ${{ steps.is-normalize-changed.outputs.transform }}
+      # normalize_change: ${{ steps.is-normalize-changed.outputs.normalize }}
+      # transform_change: ${{ steps.is-normalize-changed.outputs.transform }}
+      src_changes: ${{ steps.is-normalize-changed.outputs.changes }}
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
@@ -38,76 +39,68 @@ jobs:
             transform:
               - 'src/transform/**'
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          installer-parallel: true
+    
+    lint-and-build:
+      needs: check-changes
+      strategy:
+        matrix:
+          package: ${{ fromJSON(needs.check-changes.outputs.src_changes) }}
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: src/${{ matrix.package }}
 
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v2
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      steps:
+        - name: Checkout source
+          uses: actions/checkout@v2
+          with:
+            fetch-depth: 0
 
-      - name: Install dependencies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: make install-deps
+        - name: Install Poetry - ${{ matrix.package }}
+          uses: snok/install-poetry@v1
+          with:
+            virtualenvs-create: true
+            virtualenvs-in-project: true
+            installer-parallel: true
 
-      - name: Run format
-        run: |
-          make fmt
+        - name: Load cached venv - ${{ matrix.package }}
+          uses: actions/cache@v2
+          with:
+            path: .venv
+            key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
-      - name: Run linting
-        run: |
-          make lint
+        - name: Install dependencies - ${{ matrix.package }}
+          if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+          run: poetry install
 
-      - name: Download latest auto
-        run: |
-          auto_download_url="$(curl -fsSL https://api.github.com/repos/intuit/auto/releases/latest | jq -r '.assets[] | select(.name == "auto-linux.gz") | .browser_download_url')"
-          wget -O- "$auto_download_url" | gunzip > ~/auto
-          chmod a+x ~/auto
+        - name: Format - ${{ matrix.package }}
+          run: |
+            poetry run black .
 
-      - name: Create release
-        run: |
-          ~/auto shipit
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        - name: Lint - ${{ matrix.package }}
+          run: |
+            poetry run flack8 . --ignore="E,W"
 
-  # normalize-publish:
-  #   runs-on: ubuntu-latest
-  #   needs: Quality-check
-  #   if: ${{ needs.Quality-check.outputs.normalize_change == 'true' }}
-  #   steps:
+        - name: Build package - ${{ matrix.package }}
+          run: poetry build
 
-  #     - name: Checkout source
-  #       uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0
+    release:
+      needs: lint-and-build
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout source
+          uses: actions/checkout@v2
+          with:
+            fetch-depth: 0
 
-  #     - name: Install dependencies
-  #       run: python -m pip install build
+        - name: Download latest auto
+          run: |
+            auto_download_url="$(curl -fsSL https://api.github.com/repos/intuit/auto/releases/latest | jq -r '.assets[] | select(.name == "auto-linux.gz") | .browser_download_url')"
+            wget -O- "$auto_download_url" | gunzip > ~/auto
+            chmod a+x ~/auto
 
-  #     - name: Build package
-  #       id: build-package
-  #       run: cd src/normalize && python -m build
-
-  # transform-publish:
-  #   runs-on: ubuntu-latest
-  #   needs: Quality-check
-  #   if: ${{ needs.Quality-check.outputs.transform_change == 'true' }}
-  #   steps:
-
-  #     - name: Checkout source
-  #       uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0
-
-  #     - name: Install dependencies
-  #       run: python -m pip install build
-
-  #     - name: Build package
-  #       id: build-package
-  #       run: cd src/transform && python -m build
+        - name: Create release
+          run: |
+            ~/auto shipit
+          env:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
