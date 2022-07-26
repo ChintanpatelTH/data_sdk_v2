@@ -46,6 +46,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Installing Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
       - name: Install Poetry - ${{ matrix.package }}
         uses: snok/install-poetry@v1
         with:
