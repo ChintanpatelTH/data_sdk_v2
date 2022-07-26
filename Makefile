@@ -48,17 +48,17 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 install-deps:
-	python -m pip install black flake8 build
+	poetry install --no-interaction --no-root
 
 fmt-check:
 	cd infrastructure && terragrunt hclfmt --terragrunt-check
 	python -m black src tests --check
 
 fmt:
-	python -m black src src/**/tests
+	poetry run black src src/**/tests
 
 lint:
-	python -m flake8 src src/**/tests --ignore="E,W"
+	poetry run flake8 src src/**/tests --ignore="E,W"
 
 test: ## run tests quickly with the default Python
 	pytest
