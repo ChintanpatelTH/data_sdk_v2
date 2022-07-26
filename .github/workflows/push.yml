@@ -40,72 +40,72 @@ jobs:
               - 'src/transform/**'
 
     
-    lint-and-build:
-      needs: check-changes
-      strategy:
-        matrix:
-          package: ${{ fromJSON(needs.check-changes.outputs.src_changes) }}
-      runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: src/${{ matrix.package }}
+  lint-and-build:
+    needs: check-changes
+    strategy:
+      matrix:
+        package: ${{ fromJSON(needs.check-changes.outputs.src_changes) }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/${{ matrix.package }}
 
-      steps:
-        - name: Checkout source
-          uses: actions/checkout@v2
-          with:
-            fetch-depth: 0
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-        - name: Installing Python
-          uses: actions/setup-python@v2
-          with:
-            python-version: 3.9
+      - name: Installing Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
 
-        - name: Install Poetry - ${{ matrix.package }}
-          uses: snok/install-poetry@v1
-          with:
-            virtualenvs-create: true
-            virtualenvs-in-project: true
-            installer-parallel: true
+      - name: Install Poetry - ${{ matrix.package }}
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
 
-        - name: Load cached venv - ${{ matrix.package }}
-          uses: actions/cache@v2
-          with:
-            path: .venv
-            key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Load cached venv - ${{ matrix.package }}
+        uses: actions/cache@v2
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
-        - name: Install dependencies - ${{ matrix.package }}
-          if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-          run: poetry install
+      - name: Install dependencies - ${{ matrix.package }}
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install
 
-        - name: Format - ${{ matrix.package }}
-          run: |
-            poetry run black .
+      - name: Format - ${{ matrix.package }}
+        run: |
+          poetry run black .
 
-        - name: Lint - ${{ matrix.package }}
-          run: |
-            poetry run flake8 --exclude=.venv . --ignore="E,W"
+      - name: Lint - ${{ matrix.package }}
+        run: |
+          poetry run flake8 --exclude=.venv . --ignore="E,W"
 
-        - name: Build package - ${{ matrix.package }}
-          run: poetry build
+      - name: Build package - ${{ matrix.package }}
+        run: poetry build
 
-    release:
-      needs: lint-and-build
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout source
-          uses: actions/checkout@v2
-          with:
-            fetch-depth: 0
+  release:
+    needs: lint-and-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-        - name: Download latest auto
-          run: |
-            auto_download_url="$(curl -fsSL https://api.github.com/repos/intuit/auto/releases/latest | jq -r '.assets[] | select(.name == "auto-linux.gz") | .browser_download_url')"
-            wget -O- "$auto_download_url" | gunzip > ~/auto
-            chmod a+x ~/auto
+      - name: Download latest auto
+        run: |
+          auto_download_url="$(curl -fsSL https://api.github.com/repos/intuit/auto/releases/latest | jq -r '.assets[] | select(.name == "auto-linux.gz") | .browser_download_url')"
+          wget -O- "$auto_download_url" | gunzip > ~/auto
+          chmod a+x ~/auto
 
-        - name: Create release
-          run: |
-            ~/auto shipit
-          env:
-            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create release
+        run: |
+          ~/auto shipit
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
