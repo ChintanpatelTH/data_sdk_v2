@@ -1,4 +1,4 @@
-name: Publish on push
+name: On pull request
 
 on:
   pull_request:
@@ -34,11 +34,11 @@ jobs:
     needs: check-changes
     strategy:
       matrix:
-        package: ${{ fromJSON(needs.check-changes.outputs.src_changes) }}
+        lib: ${{ fromJSON(needs.check-changes.outputs.src_changes) }}
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: src/${{ matrix.package }}
+        working-directory: src/${{ matrix.lib }}
 
     steps:
       - name: Checkout source
@@ -51,27 +51,31 @@ jobs:
         with:
           python-version: 3.9
 
-      - name: Install Poetry - ${{ matrix.package }}
+      - name: Install Poetry - ${{ matrix.lib }}
         uses: snok/install-poetry@v1
         with:
           virtualenvs-create: true
           virtualenvs-in-project: true
           installer-parallel: true
 
-      - name: Load cached venv - ${{ matrix.package }}
+      - name: Load cached venv - ${{ matrix.lib }}
         uses: actions/cache@v2
         with:
           path: .venv
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
-      - name: Install dependencies - ${{ matrix.package }}
+      - name: Install dependencies - ${{ matrix.lib }}
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install
 
-      - name: Format - ${{ matrix.package }}
+      - name: Format - ${{ matrix.lib }}
         run: |
           poetry run black .
 
-      - name: Lint - ${{ matrix.package }}
+      - name: Lint - ${{ matrix.lib }}
         run: |
           poetry run flake8 --exclude=.venv . --ignore="E,W"
+
+      - name: Run tests - ${{ matrix.lib }}
+        run: |
+          poetry run pytest
