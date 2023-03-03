@@ -20,7 +20,7 @@ for line in sys.stdin:
 		print("%-20s %s" % (target, help))
 endef
 export PRINT_HELP_PYSCRIPT
-
+ 
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
 help:
