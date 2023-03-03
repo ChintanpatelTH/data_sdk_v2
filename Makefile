@@ -1,6 +1,6 @@
 .PHONY: clean clean-build clean-pyc clean-test coverage dist docs help install lint lint/flake8 lint/black
 .DEFAULT_GOAL := help
-
+ 
 define BROWSER_PYSCRIPT
 import os, webbrowser, sys
 
